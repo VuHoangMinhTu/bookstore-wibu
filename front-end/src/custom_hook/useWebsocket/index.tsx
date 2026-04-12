@@ -11,12 +11,23 @@ export interface Message {
     text: string;
     sentAt: string;
 }
+export const getBrokerURL = () => {
+    const isLocal = window.location.hostname === "localhost";
+
+    if (isLocal) {
+        return "ws://localhost:8080/ws";
+    } else {
+        // Khi chạy thực tế qua Cloudflare (HTTPS)
+        return "wss://back-end.minhtu.site/ws";
+    }
+};
 
 export function useWebsocket(userId: number, onMessage: (message: string) => void) {
     const clientRef = useRef<Client | null>(null);
+
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:8080/ws",
+            brokerURL: getBrokerURL(),
             reconnectDelay: 5000,
             debug: (str) => {
                 if (str.includes("ERROR")) {
@@ -74,7 +85,7 @@ export function useChat(setMessage: Dispatch<SetStateAction<Message[]>>, setIsWa
 
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:8080/ws",
+            brokerURL: getBrokerURL(),
             connectHeaders: {
                 Authorization: "Bearer " + token
             },
@@ -106,7 +117,7 @@ export function useChat(setMessage: Dispatch<SetStateAction<Message[]>>, setIsWa
                         setMessage(prev => [...prev, mapMessage]);
                     }
                 );
-                  client.subscribe(`/topic/errors/conversation/${conversationId}`, (message) => {
+                client.subscribe(`/topic/errors/conversation/${conversationId}`, (message) => {
                     console.log("Đã nhận được tin nhắn lỗi từ Server:", message.body);
                     window.dispatchEvent(new CustomEvent("limit_token_openAI", { detail: { message: message.body } }));
                 });

@@ -8,7 +8,6 @@ import InvoiceInfo from "./ProfileSections/InvoiceInfo";
 import Privileges from "./ProfileSections/Privileges";
 import WbPoint from "./WbPoint";
 import BookSeries from "./PageOther/BookSeries";
-import NotificationList from "./Nofitication";
 import OrderList from "./MyOrder";
 import BookCollectionDetailView from "./PageOther/BookSeries/BookSeriesDetails/DetailBookCollection";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -46,7 +45,6 @@ export function ProfileUser() {
             path="book-series/:collectionId"
             element={<BookCollectionDetailView />}
           />
-          <Route path="notifications" element={<NotificationList />} />
           <Route path="orders" element={<OrderList />} />
           <Route path="account-wbpoint/overview" element={<WbPoint />} />
 
