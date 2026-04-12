@@ -111,6 +111,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public AppResponse<String> login(@RequestBody LoginUserDTO requestDTO) {
+        requestDTO.setUsername(requestDTO.getUsername().toLowerCase());
         var token = userService.verify(requestDTO);
         return AppResponse.<String>builder()
                 .result(token)

@@ -284,6 +284,7 @@ public class BookCollectionServiceImpl implements BookCollectionService {
                     .discountedPrice(finalPrice)
                     .averageRating(rating)
                     .thumbnail(thumbnail)
+                    .typePurchase(book.getTypePurchase())
                     .build();
         }).toList();
 //        Get user of book collection

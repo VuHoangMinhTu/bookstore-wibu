@@ -13,4 +13,5 @@ public class BookInCollectionDTO {
     private double discountedPrice;
     private double averageRating;
     private String thumbnail;
+    private String typePurchase;
 }
