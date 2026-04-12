@@ -1,0 +1,123 @@
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { useParams } from "react-router-dom";
+import { getBookDetails, searchBooks } from "~/api/book";
+import { getCategoryChainOfBook } from "~/api/category";
+import { BookDetailsDTO, PageBookResponseDTO } from "~/types/book";
+import { CategoryChainDTO } from "~/types/category";
+import { useCart } from "~/providers/CartProvider";
+import { BookReviewOverallResponse } from "~/types/review";
+import { getBookReviewOverall } from "~/api/review";
+import { getRecommendBooks } from "~/api/user/recommendBooks";
+interface BookDetailsContextType {
+  bookDetails: BookDetailsDTO | null;
+  categoryChain: CategoryChainDTO | null;
+  relatedBooks: PageBookResponseDTO[] | null;
+  recommendBooks: PageBookResponseDTO[] | null;
+  isLoading: boolean;
+  error: string | null;
+  addToCart: () => void;
+  reviewOverall: BookReviewOverallResponse | null;
+  bookId: number;
+}
+
+const BookDetailsContext = createContext<BookDetailsContextType>({
+  bookDetails: null,
+  categoryChain: null,
+  relatedBooks: null,
+  recommendBooks: null,
+  isLoading: false,
+  error: null,
+  addToCart: () => { },
+  reviewOverall: null,
+  bookId: 0,
+});
+
+export const useBookDetailsContext = () => useContext(BookDetailsContext);
+
+interface BookDetailsProviderProps {
+  children: ReactNode;
+}
+
+export const BookDetailsProvider = ({ children }: BookDetailsProviderProps) => {
+  const [bookDetails, setBookDetails] = useState<BookDetailsDTO | null>(null);
+  const [categoryChain, setCategoryChain] = useState<CategoryChainDTO | null>(
+    null
+  );
+  const [relatedBooks, setRelatedBooks] = useState<
+    PageBookResponseDTO[] | null
+  >(null);
+  const [recommendBooks, setRecommendBooks] = useState<
+    PageBookResponseDTO[] | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [reviewOverall, setReviewOverall] =
+    useState<BookReviewOverallResponse | null>(null);
+  const { id } = useParams();
+  const [bookId, setBookId] = useState<number>(-1);
+  useEffect(() => {
+    const bookId = id ? parseInt(id, 10) : -1;
+    setBookId(bookId);
+    const loadBooks = async () => {
+      setIsLoading(true);
+      try {
+        const detailsRes = await getBookDetails(bookId);
+        setBookDetails(detailsRes.result);
+
+        const chainRes = await getCategoryChainOfBook(detailsRes.result.bookId);
+        setCategoryChain(chainRes.result);
+
+        const categoryId = chainRes.result.list[chainRes.result.list.length - 1].id;
+
+        // chạy độc lập, không chờ
+        searchBooks({ categoryId, context: " " }).then((relatedRes) =>
+          setRelatedBooks(relatedRes.result.content)
+        );
+        getRecommendBooks().then((recommendRes) =>
+          setRecommendBooks(recommendRes.result)
+        );
+        getBookReviewOverall(Number(id)).then((overall) =>
+          setReviewOverall(overall.result)
+        );
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load book details.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+
+    loadBooks();
+  }, [id, setCategoryChain]);
+  // Thêm sách vào giỏ hàng
+  const { increaseItem } = useCart();
+  const addToCart = async () => {
+    if (!id) return;
+    increaseItem(id, 1, "BOOK");
+  };
+
+  return (
+    <BookDetailsContext.Provider
+      value={{
+        bookDetails,
+        relatedBooks,
+        recommendBooks,
+        categoryChain,
+        isLoading,
+        error,
+        addToCart,
+        reviewOverall,
+        bookId
+      }}
+    >
+      {children}
+    </BookDetailsContext.Provider>
+  );
+};

@@ -1,0 +1,66 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+  application:
+    name: BackEnd-BookStore
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:admin}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/bookstore}
+  data:
+    redis:
+      port: 6379
+      host: localhost
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yukihirayato2003@gmail.com
+    password: lzrc ohon rqtz vhmo
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+    retry:
+      max-attempts: 1
+      on-client-errors: false
+  elasticsearch:
+    uris: http://localhost:9200
+    username: yato
+    password: 12345678
+app:
+  jwt-key:
+  aws:
+    access-key-id: ${SPRING_AWS_ACCESS_KEY_ID:}
+    secret-access-key: ${SPRING_AWS_SECRET_ACCESS_KEY:}
+    bucket:
+      name: my-upload-for-essay
+      request-timeout: 3600 # in seconds
+  temp-folder: F:\tmp
+
+
+  paypal:
+    client-id: ${SPRING_PAYPAL_CLIENT_ID:}
+    client-secret: ${SPRING_PAYPAL_CLIENT_SECRET:}
+
+
+logging:
+  level:
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: DEBUG

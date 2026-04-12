@@ -1,0 +1,23 @@
+package nlu.com.app.constant;
+
+
+public enum EPaymentMethod {
+    COD("Thanh toán khi nhận hàng"),
+    CREDIT_CARD("Thẻ tín dụng/Ghi nợ"),
+    BANK_TRANSFER("Chuyển khoản ngân hàng"),
+    PAYPAL("Thanh toán qua PayPal"),
+    MOMO("Ví MoMo"),
+    ZALO_PAY("Ví ZaloPay"),
+    VNPAY("VNPAY"),
+    WB_POINT("Xu Wb point");
+
+    private final String description;
+
+    EPaymentMethod(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+}
