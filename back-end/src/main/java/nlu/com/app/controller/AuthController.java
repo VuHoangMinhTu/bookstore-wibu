@@ -120,6 +120,7 @@ public class AuthController {
 
     @PostMapping("/login/admin")
     public AppResponse<String> loginOfAdmin(@RequestBody LoginUserDTO requestDTO) {
+        requestDTO.setUsername(requestDTO.getUsername().toLowerCase());
         var token = userService.verifyAccountAdmin(requestDTO);
         return AppResponse.<String>builder()
                 .result(token)

@@ -36,11 +36,25 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ open, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isValidAccount, setIsValidAccount] = useState(false);
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const loginButtonRef = useRef<HTMLButtonElement | null>(null);
-  const forgotPasswordButtonRef = useRef<HTMLButtonElement | null>(null);
+  const accountInputRef = useRef<HTMLInputElement | null>(null);
+  const passwordInputRef = useRef<HTMLInputElement | null>(null);
   const { setJwtToken } = useAuthContext();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const syncAutofillValues = () => {
+    const autofilledAccount = accountInputRef.current?.value ?? "";
+    const autofilledPassword = passwordInputRef.current?.value ?? "";
+
+    if (autofilledAccount) {
+      setAccountInfo(autofilledAccount);
+      setIsValidAccount(true);
+    }
+    if (autofilledPassword) {
+      setPassword(autofilledPassword);
+      setIsValidPassword(true);
+    }
+  };
 
   // Cập nhập lại data account khi người dùng nhập và reset lỗi
   const handleChangeAccount = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,15 +109,18 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ open, onClose }) => {
       setIsValidPassword(false);
     }
   }, [open]);
-  // Bật/tắt nút login khi account và password hợp lệ
+
+  // Trình duyệt có thể autofill sau khi Dialog render mà không gọi onChange.
+  // Đọc lại giá trị input trong các frame đầu để đồng bộ với state React.
   useEffect(() => {
-    if (loginButtonRef.current) {
-      loginButtonRef.current.disabled = !(isValidAccount && isValidPassword);
-    }
-    if (forgotPasswordButtonRef.current) {
-      forgotPasswordButtonRef.current.disabled = !isValidAccount;
-    }
-  }, [isValidAccount, isValidPassword]);
+    if (!open || mode !== "login") return;
+
+    const timers = [0, 100, 500].map((delay) =>
+      window.setTimeout(syncAutofillValues, delay)
+    );
+
+    return () => timers.forEach(window.clearTimeout);
+  }, [open, mode]);
 
   //  Khi đổi mode, reset dữ liệu
   const toggleMode = () => {
@@ -171,6 +188,9 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ open, onClose }) => {
               margin="dense"
               variant="outlined"
               value={accountInfo}
+              inputRef={accountInputRef}
+              name="username"
+              autoComplete="username"
               onChange={handleChangeAccount}
               onBlur={handleBlurAccount}
               error={!!error}
@@ -179,6 +199,9 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ open, onClose }) => {
             <TextField
               margin="dense"
               value={password}
+              inputRef={passwordInputRef}
+              name="password"
+              autoComplete="current-password"
               onChange={handleChangePassword}
               onBlur={handleBlurPassword}
               type={showPassword ? "text" : "password"}

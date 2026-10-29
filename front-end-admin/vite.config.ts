@@ -23,4 +23,12 @@ export default defineConfig({
       '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
-})
+  server: {
+    allowedHosts: [
+      // "front-end-admin.minhtu.site",
+      // "back-end.minhtu.site",
+      "admin.wibubook.online"
+    ]
+  }
+}
+)

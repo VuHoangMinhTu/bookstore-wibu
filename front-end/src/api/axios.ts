@@ -1,8 +1,8 @@
 // src/lib/axios.ts
 import axios from "axios";
-
+import {API_BASE_URL} from "~/network";
 const axiosInstance = axios.create({
-  baseURL:  import.meta.env.VITE_API_BASE_URL ||"https://back-end.minhtu.site"  || "http://localhost:8080" ,  
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

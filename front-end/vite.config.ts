@@ -12,10 +12,11 @@ export default defineConfig({
     cssCodeSplit: false, // Đảm bảo CSS không bị tách nhỏ quá mức
     sourcemap: true, // Tạo sourcemap để debug
   },
-  server:{
+  server: {
     allowedHosts: [
-      "front-end.minhtu.site",
-      "back-end.minhtu.site",
+      // "front-end.minhtu.site",
+      // "back-end.minhtu.site",
+      "wibubook.online"
     ],
   }
 });

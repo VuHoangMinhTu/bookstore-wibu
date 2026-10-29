@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Client, IMessage } from "@stomp/stompjs";
 import { useCallback } from "react";
 import { Dispatch, SetStateAction } from "react";
+import {WS_BASE_URL} from "~/network";
 export interface MessageRequest {
     message: string;
     timeSendMessage: string;
@@ -12,14 +13,7 @@ export interface Message {
     sentAt: string;
 }
 export const getBrokerURL = () => {
-    const isLocal = window.location.hostname === "localhost";
-
-    if (isLocal) {
-        return "ws://localhost:8080/ws";
-    } else {
-        // Khi chạy thực tế qua Cloudflare (HTTPS)
-        return "wss://back-end.minhtu.site/ws";
-    }
+   return WS_BASE_URL + "/ws";
 };
 
 export function useWebsocket(userId: number, onMessage: (message: string) => void) {

@@ -4,11 +4,16 @@ import { SocketMessageDTO, MessageUserResponse } from "../hooks/useAdminConversa
 import { toast } from "sonner";
 import { useAdminInbox } from "../hooks/useAdminInbox";
 import { ms } from "date-fns/locale";
+import {WS_BASE_URL} from "../network";
+export const getBrokerURL = () =>{
+   return WS_BASE_URL + "/ws"
+}
+
 export function useGetUpdatedOrder(onMessage: (message: string) => void) {
     const clientRef = useRef<Client | null>(null);
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:8080/ws",
+            brokerURL: getBrokerURL(),
             reconnectDelay: 5000,
             debug: (str) => {
                 if (str.includes("ERROR")) {
@@ -53,7 +58,7 @@ export const useAdminChatSocket = (
         if (!conversationId) return
 
         const client = new Client({
-            brokerURL: "ws://localhost:8080/ws",
+            brokerURL: getBrokerURL(),
             reconnectDelay: 5000,
             connectHeaders: {
                 Authorization: `Bearer ${localStorage.getItem("access_token_admin")}`
