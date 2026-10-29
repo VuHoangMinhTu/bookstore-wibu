@@ -14,15 +14,15 @@ Hệ thống tuân theo kiến trúc tách biệt (Decoupled Architecture), tron
 
 ### Frontend
 - **Công nghệ sử dụng**: React
-- **Tên miền**: `https://wibuonline.com`
+- **Tên miền**: `https://wibubook.online`
   
 ### Backend
 - **Công nghệ sử dụng**: Spring Boot, MySQL, Redis
-- **Tên miền**: `https://api.wibuonline.com`
+- **Tên miền**: `https://api.wibubook.online`
 - **Cơ sở dữ liệu**: MySQL để lưu trữ dữ liệu, Redis dùng để lưu trữ dữ liệu thô của Cart và toàn bộ cuộc hội thoại của User với AI cũng như là với Admin
 
 ### Docker
 - Tạo image FastAPI và mô hình LightFm, giúp backend có thể nhận được kết quả dự đoán những cuốn sách phù hợp cho mỗi User nhờ mô hình LightFm
 - Tạo image Redis để lưu trữ dữ liệu thô Cart (giúp tốc độ phản hồi giỏ hàng của User nhanh chóng và mượt mà hơn so với lưu lập tức vào MySQL), và dữ liệu chat của User, AI và admin, giúp AI có thể biết được context chat của User để phản hồi cho User tốt hơn
 ## Test Website
-- Ngoài trang https://front-end.minhtu.site/ là giao diện bên phía Khách hàng, thì trang `https://admin.wibuonline.com` là trang của admin dùng để quản lý, mọi người có thể test bằng tk, mk như trang https://front-end.minhtu.site/
+- Ngoài trang https://wibubook.online/ là giao diện bên phía Khách hàng, thì trang `https://admin.wibubook.online` là trang của admin dùng để quản lý, mọi người có thể test bằng tk, mk như trang https://wibubook.online/
